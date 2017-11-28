@@ -3,9 +3,12 @@ import {
   StyleSheet,
   Text,
   View,
-  AppRegistry
+  AppRegistry,
+  FlatList,
+  TouchableOpacity,
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
+import PersonViwer from './components/PersonViwer';
 
 export default class App extends Component<{}> {
   static navigationOptions = {
@@ -17,6 +20,7 @@ export default class App extends Component<{}> {
       color: '#fff'
     }
   };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -26,11 +30,16 @@ export default class App extends Component<{}> {
       ]
     }
   }
+
   render() {
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
         <Text>Vamos a crear una super App!</Text>
+        <FlatList
+          data={this.state.data}
+          renderItem={({ item }) => <TouchableOpacity onPress={() => navigate('PersonViwer')}><Text>{item.name}</Text></TouchableOpacity>}
+        />
       </View>
     );
   }
@@ -46,7 +55,8 @@ const styles = StyleSheet.create({
 });
 
 const screens = StackNavigator({
-  Home: { screen: App }
+  Home: { screen: App },
+  PersonViwer: { screen: PersonViwer }
 });
 
 // TODO: Change the registry name:
