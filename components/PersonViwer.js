@@ -24,6 +24,7 @@ export default class PersonViwer extends React.Component {
     return (
       <View>
         <Text>Hola, desde la nueva ventana :)</Text>
+        <Text>{this.props.navigation.state.params.name}</Text>
       </View>
     );
   }

@@ -38,7 +38,7 @@ export default class App extends Component<{}> {
         <Text>Vamos a crear una super App!</Text>
         <FlatList
           data={this.state.data}
-          renderItem={({ item }) => <TouchableOpacity onPress={() => navigate('PersonViwer')}><Text>{item.name}</Text></TouchableOpacity>}
+          renderItem={({ item }) => <TouchableOpacity onPress={() => navigate('PersonViwer', { name: item.name })}><Text>{item.name}</Text></TouchableOpacity>}
         />
       </View>
     );
