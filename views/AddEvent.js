@@ -22,10 +22,11 @@ class AddEvent extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: 'Create event',
     headerStyle: {
-      backgroundColor:'#212121',
+      backgroundColor:'#4D91D9',
     },
     headerTitleStyle: {
-      color: '#ECF000'
+      color: '#032B56',
+      marginLeft: 0,
     }
   });
 

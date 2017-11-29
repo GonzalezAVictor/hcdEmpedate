@@ -31,10 +31,11 @@ class EventDetails extends Component {
   static navigationOptions = ({ navigation }) => ({
     title: `${navigation.state.params.event.name}`,
     headerStyle: {
-      backgroundColor:'#212121',
+      backgroundColor:'#4D91D9',
     },
     headerTitleStyle: {
-      color: '#ECF000'
+      color: '#032B56',
+      marginLeft: 0,
     }
   });
 
@@ -48,8 +49,7 @@ class EventDetails extends Component {
     return(
       <View>
 
-        <View style={styles.container}>
-          <Text style={styles.eventNameLabel}>{event.name}</Text>      
+        <View style={styles.container}>     
           <ScrollView>
             <Text style={styles.eventDateLabel}>{event.date}</Text>
             <View style={styles.section}>
@@ -114,7 +114,8 @@ const styles = StyleSheet.create( {
   container: {
     backgroundColor: '#F0F0F0',
     marginBottom: 30,
-    height: '100%'
+    height: '100%',
+    justifyContent: 'center'
   },
   eventNameLabel: {
     fontSize: 20,

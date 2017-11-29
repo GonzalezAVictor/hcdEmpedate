@@ -20,10 +20,10 @@ class Home extends Component {
   static navigationOptions = {
     title: 'Events',
     headerStyle: {
-      backgroundColor:'#212121',
+      backgroundColor:'#4D91D9',
     },
     headerTitleStyle: {
-      color: '#ECF000'
+      color: '#032B56'
     }
   };
 
@@ -78,7 +78,9 @@ const styles = StyleSheet.create( {
   },
   button: {
     flex: 1,
-    backgroundColor: '#0054B2',
+    borderRadius: 4,
+    borderWidth: 0.5,
+    borderColor: '#032B56',
     justifyContent: 'center',
     alignItems: 'center',
   }
