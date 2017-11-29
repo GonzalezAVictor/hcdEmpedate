@@ -9,6 +9,9 @@ import {
 } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import PersonViwer from './components/PersonViwer';
+import Home from './views/Home';
+import EventDetails from './views/EventDetails';
+import AddEvent from './views/AddEvent';
 
 export default class App extends Component<{}> {
   static navigationOptions = {
@@ -55,8 +58,10 @@ const styles = StyleSheet.create({
 });
 
 const screens = StackNavigator({
-  Home: { screen: App },
-  PersonViwer: { screen: PersonViwer }
+  Home: { screen: Home },
+  PersonViwer: { screen: PersonViwer },
+  EventDetails: { screen: EventDetails },
+  AddEvent: { screen: AddEvent },
 });
 
 // TODO: Change the registry name:

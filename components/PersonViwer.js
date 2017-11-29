@@ -13,7 +13,8 @@ export default class PersonViwer extends React.Component {
     },
     headerTitleStyle: {
       color: '#fff'
-    }
+    },
+    headerRight: <View><Text>OK</Text></View>
   };
 
   constructor(props) {
