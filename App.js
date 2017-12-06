@@ -12,6 +12,7 @@ import PersonViwer from './components/PersonViwer';
 import Home from './views/Home';
 import EventDetails from './views/EventDetails';
 import AddEvent from './views/AddEvent';
+import FriendsList from './views/FriendsList';
 
 export default class App extends Component<{}> {
   static navigationOptions = {
@@ -62,6 +63,7 @@ const screens = StackNavigator({
   PersonViwer: { screen: PersonViwer },
   EventDetails: { screen: EventDetails },
   AddEvent: { screen: AddEvent },
+  FriendsList: { screen: FriendsList },
 });
 
 // TODO: Change the registry name:

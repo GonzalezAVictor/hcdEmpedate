@@ -14,6 +14,26 @@ const events = [
   {name: 'Peda loca', date: '29-Dic-2017'},
   {name: 'Posada Yellow', date: '23-Enr-2017'},
   {name: 'Posada Fac', date: '5-Feb-2017'},
+  {name: 'Cumpleaños del Sr. Snuffles', date: '25-Nov-2017'},
+  {name: 'Peda loca', date: '29-Dic-2017'},
+  {name: 'Posada Yellow', date: '23-Enr-2017'},
+  {name: 'Posada Fac', date: '5-Feb-2017'},
+  {name: 'Cumpleaños del Sr. Snuffles', date: '25-Nov-2017'},
+  {name: 'Peda loca', date: '29-Dic-2017'},
+  {name: 'Posada Yellow', date: '23-Enr-2017'},
+  {name: 'Posada Fac', date: '5-Feb-2017'},
+  {name: 'Cumpleaños del Sr. Snuffles', date: '25-Nov-2017'},
+  {name: 'Peda loca', date: '29-Dic-2017'},
+  {name: 'Posada Yellow', date: '23-Enr-2017'},
+  {name: 'Posada Fac', date: '5-Feb-2017'},
+  {name: 'Cumpleaños del Sr. Snuffles', date: '25-Nov-2017'},
+  {name: 'Peda loca', date: '29-Dic-2017'},
+  {name: 'Posada Yellow', date: '23-Enr-2017'},
+  {name: 'Posada Fac', date: '5-Feb-2017'},
+  {name: 'Cumpleaños del Sr. Snuffles', date: '25-Nov-2017'},
+  {name: 'Peda loca', date: '29-Dic-2017'},
+  {name: 'Posada Yellow', date: '23-Enr-2017'},
+  {name: 'Posada Fac', date: '5-Feb-2017'},
 ]
 
 class Home extends Component {
@@ -23,7 +43,7 @@ class Home extends Component {
       backgroundColor:'#4D91D9',
     },
     headerTitleStyle: {
-      color: '#032B56'
+      color: '#FFFFFF'
     }
   };
 
@@ -49,7 +69,7 @@ class Home extends Component {
           </TouchableOpacity>
         </View>
         <View style={styles.footerContainer}>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={() => navigate('FriendsList', {})}>
             <Text>See friends</Text>
           </TouchableOpacity>
         </View>

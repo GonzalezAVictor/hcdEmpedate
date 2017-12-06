@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import addButton from './../assets/add.png'
 import {
   Platform,
   StyleSheet,
@@ -10,19 +11,23 @@ import {
   Image
 } from 'react-native';
 
-class EventRowView extends Component {
+class FriendRowView extends Component {
   render() {
-    const abreviation = this.props.eventName.slice(0,1).toUpperCase()
+    let { name } = this.props;
+    const abreviation =  name ? name.slice(0,1).toUpperCase() : '';
     return(
       <View style={styels.mainContainer}>
         <View style={styels.container}>
           <Text style={styels.eventAbr}>{abreviation}</Text>
-          <Text style={styels.text}> {this.props.eventName} </Text>
+          <Text style={styels.text}> {name} </Text>
         </View>
 
-        <Text style={styels.text}>
-          {this.props.date}
-        </Text>
+        <TouchableOpacity>
+          <Image
+            source={addButton}
+            style={styels.addButton}
+          />
+        </TouchableOpacity>
       </View>
     )
   }
@@ -59,7 +64,11 @@ const styels = StyleSheet.create( {
   },
   text: {
     color: '#95989A'
+  },
+  addButton: {
+    width: 17.37,
+    height: 17.37,
   }
 } )
 
-export default EventRowView
+export default FriendRowView

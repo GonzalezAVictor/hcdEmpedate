@@ -1,155 +1,219 @@
 import React, { Component } from 'react';
+import FoodRow from './../components/FoodRow'
+import eventNameIcon from './../assets/confetti.png'
+import eventDateIcon from './../assets/calendar-3.png'
+import foodNameIcon from './../assets/cutlery.png'
+import addFoodIcon from './../assets/add.png'
+import addEventIcon from './../assets/add-event.png'
+import foodPriceIcon from './../assets/dollar-symbol.png'
+import eventAddressIcon from './../assets/facebook-placeholder-for-locate-places-on-maps.png'
+import searchIcon from './../assets/musica-searcher.png'
 import {
   Platform,
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
+  ScrollView,
   TextInput,
-  ScrollView
+  Image
 } from 'react-native';
 
-const foodTest = [
-  {name: 'Pastor', price:'120'},
-  {name: 'Pastor', price:'120'},
-  {name: 'Pastor', price:'120'},
-  {name: 'Pastor', price:'120'},
-  {name: 'Pastor', price:'120'},
-  {name: 'Pastor', price:'120'}
+const foods = [
+  {name: 'Pastor', price: 250},
+  {name: 'Pastor', price: 250}
 ]
 
-class AddEvent extends Component {
-  static navigationOptions = ({ navigation }) => ({
-    title: 'Create event',
-    headerStyle: {
+class AddEventView extends Component{
+  static navigationOptions = ({ navigation }) => ({ 
+    title: 'Add event', 
+    headerTintColor: '#FFFFFF',
+    headerStyle: { 
       backgroundColor:'#4D91D9',
-    },
-    headerTitleStyle: {
-      color: '#032B56',
-      marginLeft: 0,
-    }
+    }, 
+    headerTitleStyle: { 
+      color: '#FFFFFF', 
+      marginLeft: 0, 
+    } 
   });
 
   render() {
+    const { navigate } = this.props.navigation;
     return(
-      <View>
-        <View style={styles.container}>
-          <ScrollView style={styles.formSection}>
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Event Name:</Text>
-              <TextInput
-                style={styles.field}
-              />
+      <View style={{flex:1}}>
+        
+        <View style={styles.mainContaier}>
+          <ScrollView>
+            <Text style={styles.title}>Events Details</Text>
+
+            <View style={styles.formSection}>
+              <View style={styles.formGroup}>
+                <Image
+                  source={eventNameIcon}
+                  style={styles.icon}
+                />
+
+                <TextInput
+                  style={styles.input}
+                  placeholder="Event Name..."
+                  underlineColorAndroid='#BCBCBC' 
+                />
+              </View>
+
+              <View style={styles.formGroup}>
+                <Image
+                  source={eventDateIcon}
+                  style={styles.icon}
+                />
+
+                <TextInput
+                  style={styles.input}
+                  placeholder="Event Date..."
+                  underlineColorAndroid='#BCBCBC' 
+                />
+              </View>
+
+              <View style={styles.formGroup}>
+                <Image
+                  source={eventAddressIcon}
+                  style={styles.icon}
+                />
+
+                <TextInput
+                  style={styles.input}
+                  placeholder="Event Address..."
+                  underlineColorAndroid='#BCBCBC' 
+                />
+              </View>
             </View>
 
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Event Date:</Text>
-              <TextInput
-                style={styles.field}
-              />
-            </View>
+            <View style={styles.foodSection}>
+              <Text style={styles.title}>Food</Text>
 
-            <View style={styles.formGroup}>
-              <Text style={styles.label}t>Address:</Text>
-              <TextInput
-                style={styles.field}
-              />
-            </View>
-
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Food & Snacks</Text>
-              {
-                foodTest.map( (food, index)=> {
+              <View style={styles.foodList}>
+                {foods.map( ( food, index )=>{
                   return(
-                    <Text key={index} style={styles.foodItem}> {food.name} - ${food.price} </Text>
+                    <FoodRow
+                      key={index}
+                      name={food.name}
+                      price={food.price}
+                    />
                   )
-                } )
-              }
+                } )}
+              </View>
 
-              <TouchableOpacity style={styles.addFoodButton}>
-                <View>
-                  <Text style={styles.addFoodbuttonText}>Add Food</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+              <View style={styles.inlineForm}>
+                <View style={{flexDirection: 'row', alignItems:'center'}}>
+                  <View style={styles.formGroup}>
+                    <Image
+                      source={foodNameIcon}
+                      style={styles.icon}
+                    />
 
-            <View style={styles.formGroup}>
-              <TouchableOpacity style={styles.saveButton}>
-                <View>
-                  <Text style={styles.saveButtonText}>Save</Text>
+                    <TextInput
+                      style={styles.foodInput}
+                      placeholder="Food..."
+                      underlineColorAndroid='#BCBCBC' 
+                    />
+                  </View>
+
+                  <View style={styles.formGroup}>
+                    <Image
+                      source={foodPriceIcon}
+                      style={styles.icon}
+                    />
+
+                    <TextInput
+                      style={styles.foodInput}
+                      placeholder="Price..."
+                      underlineColorAndroid='#BCBCBC' 
+                    />
+                  </View>
                 </View>
-              </TouchableOpacity>
+
+                <TouchableOpacity style={styles.formGroup}>
+                  <Image
+                    source={addFoodIcon}
+                    style={styles.icon}
+                  />
+                </TouchableOpacity>
+              </View>
             </View>
             
+            <TouchableOpacity style={styles.addButton}>
+              <Image
+                source={addEventIcon}
+                style={styles.icon}
+              />
+              <Text style={styles.buttonText}>Add Event</Text>
+            </TouchableOpacity>
           </ScrollView>
         </View>
       </View>
-      
     )
   }
 }
 
-const styles = StyleSheet.create( {
-  container: {
-    backgroundColor: '#F0F0F0',
-    height: '100%'
+const styles = StyleSheet.create({
+  mainContaier: {
+    backgroundColor: '#FAFAFA',
+    minHeight: '100%',
+    flex: 1,
+    paddingTop: 16,
+    paddingLeft: 26,
   },
-  mainTitle: {
-    fontSize: 20,
-    color: '#95989A',
-    marginTop: 40,
-    paddingLeft: 20
-  },
-  label: {
+  title:{
+    fontWeight: 'bold',
     fontSize: 18,
-    marginBottom:10,
-    color: '#B27303'
+    color: '#95989A'
   },
-  field: {
-    width: 330,
-    height: 37,
-    fontSize: 18,
-    paddingLeft: 15,
-    fontSize: 14,
-    color: '#B27303',
-    backgroundColor: 'rgba(255, 166, 8, .31)'
+  formSection:{
+    marginTop: 20
   },
-  formGroup: {
-    marginLeft: 20,
-    marginBottom: 20
+  formGroup:{
+    flexDirection: 'row',
+    marginBottom:30
   },
-  formSection: {
-    paddingTop: 20,
-    paddingBottom: 50
+  icon:{
+    width: 25,
+    height: 25,
+    marginRight: 12
   },
-  foodItem:{
-    fontSize: 15,
-    color: '#95989A',
-    marginBottom: 5
+  input:{
+    width: '80%',
+    paddingBottom: 10
   },
-  addFoodButton: {
-    width: 118,
-    height: 26,
+  foodInput:{
+    width: 50,
+    paddingBottom: 10
+  },
+  foodSection:{
+    marginTop: 30
+  },
+  foodList:{
     marginTop: 10,
-    backgroundColor: 'rgba( 0, 84, 178, .63 )',
+    marginBottom: 15,
+    paddingRight: 16
+  },
+  inlineForm:{
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20
+  },
+  addButton:{
+    width: 147,
+    height: 40,
+    alignItems: 'center',
     justifyContent: 'center',
-    alignItems: 'center'
+    flexDirection: 'row',
+    backgroundColor: '#81D2C7',
+    marginTop: 10
   },
-  addFoodbuttonText: {
-    color: '#FFFFFF',
-    fontSize: 15
-  },
-  saveButton: {
-    width: 157,
-    height: 41,
-    backgroundColor: '#0054B2',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  saveButtonText: {
-    color: '#FFFFFF',
-    fontSize: 20
+  buttonText: {
+    color:'#FFFFFF',
+    marginLeft: 1
   }
-} )
+})
 
-export default AddEvent
+export default AddEventView
