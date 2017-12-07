@@ -7,10 +7,12 @@ import {
   Image,
   Text,
   TouchableOpacity,
-  Alert
+  Alert,
+  Keyboard
 } from 'react-native';
 import {Jiro} from 'react-native-textinput-effects'
 import icon from '../assets/empedate-icon.png'
+import ShakingText from 'react-native-shaking-text';
 
 class Login extends Component {
   static navigationOptions = {
@@ -24,7 +26,9 @@ class Login extends Component {
       email: ' ',
       view: 'email',
       password: ' ',
-      email2: ' '
+      email2: ' ',
+      error: ' ',
+      change: 1
     };
   }
 
@@ -33,9 +37,11 @@ class Login extends Component {
       .then(response => response.json())
       .then(responseJson => {
         if (responseJson) {
-          //this.setState({email2: this.state.email})
           this.setState({view: 'password'})
           this.textInput.clear()
+          this.setState({error: ' '})
+        } else {
+          this.setState({error: 'The email is not a valid account' + this.changer()})
         }
         this.forceUpdate()
       })
@@ -44,6 +50,15 @@ class Login extends Component {
       });
   }
 
+  changer() {
+    if(this.state.change === 1) {
+      this.setState({change: 0})
+      return ' '
+    } else {
+      this.setState({change: 1})
+      return '  '
+    }
+  }
   _authUser() {
     let body = JSON.stringify({
       email: this.state.email,
@@ -58,11 +73,24 @@ class Login extends Component {
       body: body
     }).then(response => response.json())
       .then(responseJson => {
-       Alert.alert(JSON.stringify(responseJson))
+        if(!responseJson) {
+          this.setState({error: 'The given password is wrong, try again.'+ this.changer()})
+        } else {
+          Keyboard.dismiss()
+          const { navigate } = this.props.navigation
+          navigate('Home', { user: responseJson})
+        }
       })
       .catch(error => {
         console.error(error);
       });
+  }
+
+  wrongInput() {
+    return {
+      borderRadius: 10,
+      borderColor: 'red',
+    }
   }
 
   render() {
@@ -84,7 +112,7 @@ class Login extends Component {
               />
             </View>
             <View style={styles.eventsContainer}>
-              <Jiro style={{flex: 7}}
+              <Jiro style={[{flex: 7}, this.wrongInput()]}
                     label={'Enter your ' + this.state.view}
                     borderColor={'#032b56'}
                     labelStyle={{color: 'black'}}
@@ -99,7 +127,7 @@ class Login extends Component {
               </View>
             </View>
             <View style={styles.footerContainer}>
-
+              <ShakingText style={{color: '#ff333d'}}>{this.state.error}</ShakingText>
             </View>
             <View style={{flex: 1}}/>
           </View>
@@ -141,7 +169,7 @@ class Login extends Component {
               </View>
             </View>
             <View style={styles.footerContainer}>
-
+              <ShakingText style={{color: '#ff333d'}}>{this.state.error}</ShakingText>
             </View>
             <View style={{flex: 1}}/>
           </View>
