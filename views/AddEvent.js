@@ -18,6 +18,7 @@ import {
   TextInput,
   Image
 } from 'react-native';
+import EventService from './../api/EventService';
 
 const foods = [
   {name: 'Pastor', price: 250},
@@ -37,6 +38,24 @@ class AddEventView extends Component{
     } 
   });
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: 'SuperFiesta',
+      start_time: '2017-12-04 11:23:32',
+      address: 'c152 x44 y 46 col Magnolias',
+      created_by: 1 // TODO: usar el id del usuario logueado
+    };
+    this.handleCreateEvent = this.handleCreateEvent.bind(this);
+  }
+
+  handleCreateEvent() {
+    console.log(this.state);
+    EventService.createOne(this.state).then(response => {
+      console.log('-> response: ', response);
+    });
+  }
+
   render() {
     const { navigate } = this.props.navigation;
     return(
@@ -44,7 +63,6 @@ class AddEventView extends Component{
         
         <View style={styles.mainContaier}>
           <ScrollView>
-            <Text style={styles.title}>Events Details</Text>
 
             <View style={styles.formSection}>
               <View style={styles.formGroup}>
@@ -56,7 +74,8 @@ class AddEventView extends Component{
                 <TextInput
                   style={styles.input}
                   placeholder="Event Name..."
-                  underlineColorAndroid='#BCBCBC' 
+                  underlineColorAndroid='#BCBCBC'
+                  onChangeText={(name) => this.setState({ name })}
                 />
               </View>
 
@@ -70,6 +89,7 @@ class AddEventView extends Component{
                   style={styles.input}
                   placeholder="Event Date..."
                   underlineColorAndroid='#BCBCBC' 
+                  onChangeText={(start_time) => this.setState({ start_time })}
                 />
               </View>
 
@@ -82,7 +102,8 @@ class AddEventView extends Component{
                 <TextInput
                   style={styles.input}
                   placeholder="Event Address..."
-                  underlineColorAndroid='#BCBCBC' 
+                  underlineColorAndroid='#BCBCBC'
+                  onChangeText={(address) => this.setState({ address })}
                 />
               </View>
             </View>
@@ -140,7 +161,7 @@ class AddEventView extends Component{
               </View>
             </View>
             
-            <TouchableOpacity style={styles.addButton}>
+            <TouchableOpacity style={styles.addButton} onPress={this.handleCreateEvent}>
               <Image
                 source={addEventIcon}
                 style={styles.icon}

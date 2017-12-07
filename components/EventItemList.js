@@ -21,7 +21,7 @@ class EventRowView extends Component {
         </View>
 
         <Text style={styels.text}>
-          {this.props.date}
+          {this.props.eventDate.slice(0,10)}
         </Text>
       </View>
     )

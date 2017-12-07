@@ -18,6 +18,7 @@ import {
   TextInput,
   Image
 } from 'react-native';
+import EventService from './../api/EventService';
 
 const foods = [
   {name: 'Pastor', price: 250},
@@ -46,9 +47,25 @@ class AddEventView extends Component{
     } 
   });
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      event: {},
+    };
+  }
+
+  componentDidMount() {
+    let { event } = this.props.navigation.state.params; 
+    console.log('-> event: ', event);
+    EventService.getById(event.id).then(response => {
+      console.log('-> response: ', response);
+      this.setState({ event: response });
+    });
+  }
+
   render() {
     const { navigate } = this.props.navigation;
-    let { event } = this.props.navigation.state.params; 
+    let { event } = this.state; 
     return(
       <View style={styles.mainContaier}>
         <ScrollView>
@@ -57,7 +74,7 @@ class AddEventView extends Component{
               source={eventDateIcon}
               style={styles.calendarIcon}
             />
-            <Text style={styles.dateLabel}>{event.date}</Text>
+            <Text style={styles.dateLabel}>{ event.start_time ? event.start_time.slice(0, 10) : ''}</Text>
           </View>
 
           <View style={styles.foodContainer}>
@@ -102,11 +119,11 @@ class AddEventView extends Component{
           </View>
           
           <View>
-            <Text style={styles.title}>Friends ({5})</Text>
+            <Text style={styles.title}>Friends ({event.guests ? event.guests.length : 0})</Text>
             {
-              friends.map(friend => {
-                return <Text>{friend.name}</Text>
-              })
+              event.guests ? event.guests.map((friend, i) => {
+                return <Text key={i}>{friend.name}</Text>
+              }) : null
             }
           </View>
 

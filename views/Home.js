@@ -8,32 +8,11 @@ import {
   TouchableOpacity,
   FlatList
 } from 'react-native';
+import EventService from './../api/EventService';
 
 const events = [
   {name: 'Cumpleaños del Sr. Snuffles', date: '25-Nov-2017'},
   {name: 'Peda loca', date: '29-Dic-2017'},
-  {name: 'Posada Yellow', date: '23-Enr-2017'},
-  {name: 'Posada Fac', date: '5-Feb-2017'},
-  {name: 'Cumpleaños del Sr. Snuffles', date: '25-Nov-2017'},
-  {name: 'Peda loca', date: '29-Dic-2017'},
-  {name: 'Posada Yellow', date: '23-Enr-2017'},
-  {name: 'Posada Fac', date: '5-Feb-2017'},
-  {name: 'Cumpleaños del Sr. Snuffles', date: '25-Nov-2017'},
-  {name: 'Peda loca', date: '29-Dic-2017'},
-  {name: 'Posada Yellow', date: '23-Enr-2017'},
-  {name: 'Posada Fac', date: '5-Feb-2017'},
-  {name: 'Cumpleaños del Sr. Snuffles', date: '25-Nov-2017'},
-  {name: 'Peda loca', date: '29-Dic-2017'},
-  {name: 'Posada Yellow', date: '23-Enr-2017'},
-  {name: 'Posada Fac', date: '5-Feb-2017'},
-  {name: 'Cumpleaños del Sr. Snuffles', date: '25-Nov-2017'},
-  {name: 'Peda loca', date: '29-Dic-2017'},
-  {name: 'Posada Yellow', date: '23-Enr-2017'},
-  {name: 'Posada Fac', date: '5-Feb-2017'},
-  {name: 'Cumpleaños del Sr. Snuffles', date: '25-Nov-2017'},
-  {name: 'Peda loca', date: '29-Dic-2017'},
-  {name: 'Posada Yellow', date: '23-Enr-2017'},
-  {name: 'Posada Fac', date: '5-Feb-2017'},
 ]
 
 class Home extends Component {
@@ -47,8 +26,23 @@ class Home extends Component {
     }
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      events: [],
+    }
+  }
+
+  componentDidMount() {
+    EventService.getEventsInvted().then(response => {
+      // console.log(response);
+      this.setState({ events: response });
+    });
+  }
+
   render() {
     const { navigate } = this.props.navigation;
+    let { events } = this.state;
     return(
       <View style={styles.container}>
         <View style={styles.eventsContainer}>
@@ -58,7 +52,7 @@ class Home extends Component {
               <EventItemList
                 key = {index}
                 eventName = {item.name}
-                eventDate = {item.date}
+                eventDate = {item.start_time}
               />
             </TouchableOpacity>)}
           />
