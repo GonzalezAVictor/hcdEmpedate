@@ -7,7 +7,7 @@ import addFoodIcon from './../assets/add.png'
 import addEventIcon from './../assets/add-event.png'
 import foodPriceIcon from './../assets/dollar-symbol.png'
 import eventAddressIcon from './../assets/facebook-placeholder-for-locate-places-on-maps.png'
-import searchIcon from './../assets/musica-searcher.png'
+import searchIcon from './../assets/musica-searcher.png';
 import {
   Platform,
   StyleSheet,
@@ -51,6 +51,7 @@ class AddEventView extends Component{
     super(props);
     this.state = {
       event: {},
+      total: 0,
     };
   }
 
@@ -60,12 +61,24 @@ class AddEventView extends Component{
     EventService.getById(event.id).then(response => {
       console.log('-> response: ', response);
       this.setState({ event: response });
+    }).then(() => {
+      this.calculateTotal();
     });
+  }
+
+  calculateTotal() {
+    let { event } = this.state;
+    let { needs } = event;
+    let total = 0;
+    needs.forEach(fod => {
+      total = parseFloat(fod.approximate_price) + parseFloat(total);
+    });
+    this.setState({ total });
   }
 
   render() {
     const { navigate } = this.props.navigation;
-    let { event } = this.state; 
+    let { event } = this.state;
     return(
       <View style={styles.mainContaier}>
         <ScrollView>
@@ -79,6 +92,21 @@ class AddEventView extends Component{
 
           <View style={styles.foodContainer}>
             <Text style={styles.title}>Food ({0})</Text>
+            {
+              this.state.event.needs ? this.state.event.needs.map( ( food, index )=>{
+                return(
+                  <FoodRow
+                    key={index}
+                    name={food.name}
+                    price={food.approximate_price}
+                  />
+                )
+              } ) : null
+            }
+          </View>
+
+          <View style={styles.total}>
+            <Text>Total:  ${this.state.total}</Text>
           </View>
 
           <View style={styles.inlineForm}>
@@ -127,16 +155,7 @@ class AddEventView extends Component{
             }
           </View>
 
-          <View style={styles.moneyContainer}>
-            <Text style={styles.title}>Money By Friend: ${parseFloat(53)}</Text>
-            <TouchableOpacity style={styles.addButton}>
-              <Image
-                source={addEventIcon}
-                style={styles.icon}
-              />
-              <Text style={styles.buttonText}>Add Event</Text>
-            </TouchableOpacity>
-          </View>
+          
 
 
 
@@ -205,7 +224,21 @@ const styles = StyleSheet.create({
   buttonText: {
     color:'#FFFFFF',
     marginLeft: 1
+  },
+  total: {
+    alignItems: 'flex-end'
   }
-})
+});
+
+// <View style={styles.moneyContainer}>
+//             <Text style={styles.title}>Money By Friend: ${parseFloat(53)}</Text>
+//             <TouchableOpacity style={styles.addButton}>
+//               <Image
+//                 source={addEventIcon}
+//                 style={styles.icon}
+//               />
+//               <Text style={styles.buttonText}>Add Event</Text>
+//             </TouchableOpacity>
+//           </View>
 
 export default AddEventView

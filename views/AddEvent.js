@@ -19,10 +19,11 @@ import {
   Image
 } from 'react-native';
 import EventService from './../api/EventService';
+import UserService from './../api/UserService';
+import ItemService from './../api/ItemService';
 
 const foods = [
   {name: 'Pastor', price: 250},
-  {name: 'Pastor', price: 250}
 ]
 
 class AddEventView extends Component{
@@ -41,19 +42,126 @@ class AddEventView extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      name: 'SuperFiesta',
+      name: '',
       start_time: '2017-12-04 11:23:32',
-      address: 'c152 x44 y 46 col Magnolias',
-      created_by: 1 // TODO: usar el id del usuario logueado
+      address: '',
+      created_by: 1, // TODO: usar el id del usuario logueado
+      users: [],
+      friends: [],
+      userToAdd: '',
+      food: [],
+      quantity: '',
+      foodName: '',
+      foodPrice: '',
+      itemsToAttach: [],
+      eventId: '',
     };
     this.handleCreateEvent = this.handleCreateEvent.bind(this);
+    this.handleAddFriend = this.handleAddFriend.bind(this);
+    this.handleAddFood = this.handleAddFood.bind(this);
+    this.calculateTotal = this.calculateTotal.bind(this);
+    this.attachNeeds = this.attachNeeds.bind(this);
+  }
+
+  componentDidMount() {
+    UserService.getAllUsers().then(response => {
+      console.log('-> users: ', response);
+      this.setState({ users: response });
+    });
   }
 
   handleCreateEvent() {
-    console.log(this.state);
     EventService.createOne(this.state).then(response => {
-      console.log('-> response: ', response);
+      // console.log('-> response: ', response);
+      this.setState({ eventId: response.id });
+      return response;
+    }).then((response) => {
+      console.log('->>>> ', response);
+      let data = {
+        guests: this.state.friends,
+      };
+      EventService.addUserToEvent(response.id, data).then(response2 => {
+        console.log('-> response2');
+      });
+      return response;
+    }).then(response => {
+      this.attachNeeds();
     });
+  }
+
+  attachNeeds() {
+    let { food } = this.state;
+    let foodLength = food.length;
+    food.forEach((fod, i) => {
+      let item = {
+        name: fod.name,
+        approximate_price: fod.price,
+        annotations: "lalala"
+      };
+      ItemService.createItem(item).then(response => {
+        console.log('-> response2');
+        return response;
+      }).then(response => {
+        console.log('Hi :D : ', response);
+        let newArrayItemsToAttach = this.state.itemsToAttach;
+        newArrayItemsToAttach.push({ id: response.id, quantity: 1 });
+        this.setState({ itemsToAttach: newArrayItemsToAttach });
+        console.log(3);
+        return;
+      }).then(() => {
+        if(i === foodLength - 1) {
+          let itemsToAdd = {
+            items: this.state.itemsToAttach,
+          };
+          console.log('-> se va aneviar ésto: ', itemsToAdd);
+          setTimeout(ItemService.attachItemsToEvent(this.state.eventId, itemsToAdd).then(response3 => {
+            console.log('-> response3 final: ', response3);
+          }), 1000);
+        }
+      });
+    });
+  }
+
+  handleAddFood() {
+    let newFood = {
+      name: this.state.foodName,
+      price: this.state.foodPrice,
+    };
+    let newArrayFood = this.state.food;
+    newArrayFood.push(newFood);
+    this.setState({
+      food: newArrayFood,
+      foodName: '',
+      foodPrice: ''
+    });
+    console.log('-> foods: ', this.state.food);
+  }
+
+  handleAddFriend() {
+    let { users, userToAdd } = this.state;
+    let userToAdd2 = users.find(user => {
+      console.log(user);
+      return user.name.toString().toLowerCase() === userToAdd.toString().toLowerCase();
+    });
+    console.log(userToAdd2);
+    if (userToAdd2) {
+      let newArrayFriends = this.state.friends;
+      newArrayFriends.push(userToAdd2.id);
+      this.setState({ friends: newArrayFriends });
+    } else {
+      console.log('-> hacer algo al respecto');
+    }
+    this.setState({ userToAdd: '' });
+    console.log('-> this.state.friends: ', this.state.friends);
+  }
+
+  calculateTotal() {
+    let { food } = this.state;
+    let total = 0;
+    food.forEach(fod => {
+      total = parseFloat(total) + parseFloat(fod.price);
+    });
+    return <Text>Total:  ${ total }</Text>;
   }
 
   render() {
@@ -89,7 +197,6 @@ class AddEventView extends Component{
                   style={styles.input}
                   placeholder="Event Date..."
                   underlineColorAndroid='#BCBCBC' 
-                  onChangeText={(start_time) => this.setState({ start_time })}
                 />
               </View>
 
@@ -108,11 +215,29 @@ class AddEventView extends Component{
               </View>
             </View>
 
+            <Text style={styles.title}>Friends</Text>
+
+            <View style={styles.friendsSection}>
+              <TextInput
+                style={styles.friendInput}
+                placeholder="Friend"
+                value={this.state.userToAdd}
+                underlineColorAndroid='#BCBCBC'
+                onChangeText={(userToAdd) => this.setState({ userToAdd })}
+              />
+              <TouchableOpacity style={styles.addFriend} onPress={this.handleAddFriend}>
+                <Image
+                  source={addFoodIcon}
+                  style={styles.icon}
+                />
+              </TouchableOpacity>
+            </View>
+
             <View style={styles.foodSection}>
               <Text style={styles.title}>Food</Text>
 
               <View style={styles.foodList}>
-                {foods.map( ( food, index )=>{
+                {this.state.food.map( ( food, index )=>{
                   return(
                     <FoodRow
                       key={index}
@@ -121,6 +246,10 @@ class AddEventView extends Component{
                     />
                   )
                 } )}
+              </View>
+
+              <View style={styles.foodTotal}>
+                <Text>{this.calculateTotal()}</Text>
               </View>
 
               <View style={styles.inlineForm}>
@@ -134,7 +263,9 @@ class AddEventView extends Component{
                     <TextInput
                       style={styles.foodInput}
                       placeholder="Food..."
-                      underlineColorAndroid='#BCBCBC' 
+                      underlineColorAndroid='#BCBCBC'
+                      value={this.state.foodName}
+                      onChangeText={(foodName) => this.setState({ foodName })}
                     />
                   </View>
 
@@ -147,12 +278,14 @@ class AddEventView extends Component{
                     <TextInput
                       style={styles.foodInput}
                       placeholder="Price..."
-                      underlineColorAndroid='#BCBCBC' 
+                      value={this.state.foodPrice}
+                      underlineColorAndroid='#BCBCBC'
+                      onChangeText={(foodPrice) => this.setState({ foodPrice })}
                     />
                   </View>
                 </View>
 
-                <TouchableOpacity style={styles.formGroup}>
+                <TouchableOpacity style={styles.formGroup} onPress={this.handleAddFood}>
                   <Image
                     source={addFoodIcon}
                     style={styles.icon}
@@ -209,7 +342,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10
   },
   foodSection:{
-    marginTop: 30
+    // marginTop: 30
   },
   foodList:{
     marginTop: 10,
@@ -220,7 +353,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20
+    marginTop: 10
   },
   addButton:{
     width: 147,
@@ -234,6 +367,24 @@ const styles = StyleSheet.create({
   buttonText: {
     color:'#FFFFFF',
     marginLeft: 1
+  },
+  friendsSection: {
+    flex: 1,
+    marginBottom:15,
+    // backgroundColor: 'red',
+    flexDirection: 'row'
+  },
+  friendInput: {
+    flex: 7
+  },
+  addFriend: {
+    flex: 2
+  },
+  foodTotal: {
+    flex: 1,
+    // backgroundColor: 'red',
+    alignItems: 'flex-end',
+    marginRight: 15
   }
 })
 

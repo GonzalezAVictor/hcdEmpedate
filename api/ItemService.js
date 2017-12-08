@@ -11,43 +11,16 @@ function createHeaders() {
 
 module.exports = {
 
-  getById(eventId) {
-    return fetch(API_ENDPOINT.concat(`events/${eventId}`), 
-      {
-        method: 'GET',
-        headers: createHeaders(),
-      }
-    ).then((response) => response.json());
-  },
-
-  getEventsInvted() {
-    return fetch(API_ENDPOINT.concat(`events`), 
-      {
-        method: 'GET',
-        headers: createHeaders(),
-      }
-    ).then((response) => response.json());
-  },
-
-  getEventsCreated() {
-    return fetch(API_ENDPOINT.concat(`events?creator=true`), 
-      {
-        method: 'GET',
-        headers: createHeaders(),
-      }
-    ).then((response) => response.json());
-  },
-
-  createOne(data) {
-    return fetch(API_ENDPOINT.concat(`events`), {
+  createItem(data) {
+    return fetch(API_ENDPOINT.concat(`items`), {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data)
     }).then((response) => response.json());
   },
 
-  addUserToEvent(eventId, data) {
-    return fetch(API_ENDPOINT.concat(`events/${eventId}/guests`), {
+  attachItemsToEvent(eventId, data) {
+    return fetch(API_ENDPOINT.concat(`events/${eventId}/items`), {
       method: "POST",
       headers: createHeaders(),
       body: JSON.stringify(data)
